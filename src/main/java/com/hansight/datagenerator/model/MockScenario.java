@@ -4,6 +4,8 @@ package com.hansight.datagenerator.model;
  * Created by guoyifeng on 10/15/18
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * This scenario class is designed for Nanjing big screen feature
  */
@@ -120,26 +122,32 @@ public class MockScenario {
         this.alarm_level = alarm_level;
     }
 
+    @JsonIgnore
     public void setConsistent(boolean consistent) {
         this.consistent = consistent;
     }
 
+    @JsonIgnore
     public void setDepartment(String department) {
         this.department = department;
     }
 
+    @JsonIgnore
     public void setDisposal_advice(String disposal_advice) {
         this.disposal_advice = disposal_advice;
     }
 
+    @JsonIgnore
     public void setEntity(String entity) {
         this.entity = entity;
     }
 
+    @JsonIgnore
     public void setEntity_config_id(String entity_config_id) {
         this.entity_config_id = entity_config_id;
     }
 
+    @JsonIgnore
     public void setGroup(String group) {
         this.group = group;
     }
@@ -164,6 +172,7 @@ public class MockScenario {
         this.scenario = scenario;
     }
 
+    @JsonIgnore
     public void setScenario_desc(String scenario_desc) {
         this.scenario_desc = scenario_desc;
     }

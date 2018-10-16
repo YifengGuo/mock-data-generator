@@ -106,6 +106,7 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
         }
         curr.setScenario("mock_test_" + index);
         curr.setScenario_setting_id(UUID.randomUUID().toString());
+        curr.setModified(System.currentTimeMillis()); // set last modified time with now
         return curr;
     }
 

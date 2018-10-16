@@ -81,10 +81,10 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
 
     public MockUser initial(int index, Date date) {
         MockUser curr = new MockUser();
-        curr.setDepartment("");
+        curr.setDepartment("mock department");
         curr.setFirst_opt_time(getCurrentDayStart(date));
         curr.setEnd_opt_time(getCurrentDayEnd(date));
-        curr.setGroup("");
+        curr.setGroup("mock group");
         curr.setId((String.valueOf(index)));
         curr.setMockup(true);
         curr.setOccur_time(getCurrentDayStart(date));
