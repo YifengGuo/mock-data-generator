@@ -26,7 +26,7 @@ public class Generator {
     public static void main(String[] args) {
 //        run(DEFAULT_SCENARIO_START_INDEX, DEFAULT_USER_START_INDEX, TODAY);
 //        run(2, DEFAULT_USER_START_INDEX, new Date(System.currentTimeMillis()-24*60*60*1000));
-        customGenerate(DEFAULT_USER_START_INDEX, WEEK_DAYS, new Date());
+        customGenerate(DEFAULT_USER_START_INDEX, WEEK_DAYS, TODAY);
     }
 
     /**
