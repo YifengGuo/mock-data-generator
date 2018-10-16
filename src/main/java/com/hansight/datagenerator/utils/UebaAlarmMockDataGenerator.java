@@ -99,7 +99,6 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
         curr.setMockup(true);
         curr.setPeriod(86400000);
         curr.setScore(getRandomScore(curr));
-        LOG.info("{}", index);
         if (index <= SCENARIO_LIMIT) {
             index = index;
         } else {
@@ -125,7 +124,7 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
         IndexResponse response = connection.client().prepareIndex(index, type, id)
                 .setSource(json)
                 .get();
-        LOG.info("scenario index repsonse is {}", response.getId());
+        LOG.info("scenario index response is {}", response.getId());
     }
 
     // return a valid score of scenario based on its alarm_level
