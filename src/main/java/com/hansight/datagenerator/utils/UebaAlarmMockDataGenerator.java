@@ -92,7 +92,7 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
         curr.setOccur_time(getCurrentDayStart(date));
         curr.setEnd_time(getCurrentDayEnd(date));
         long alarmLevel = new Random().nextInt(5);
-        curr.setAlarml_level(alarmLevel);
+        curr.setAlarm_level(alarmLevel);
         if (alarmLevel != 0L && !set.contains(alarmLevel)) {
             set.add(alarmLevel);
         }
@@ -129,15 +129,15 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
 
     // return a valid score of scenario based on its alarm_level
     private long getRandomScore(MockScenario curr) {
-        if (curr.getAlarml_level() == 0) {
+        if (curr.getAlarm_level() == 0) {
             return 0L;
-        } else if (curr.getAlarml_level() == 1) {
+        } else if (curr.getAlarm_level() == 1) {
             return ThreadLocalRandom.current().nextLong(0, 30);
-        } else if (curr.getAlarml_level() == 2) {
+        } else if (curr.getAlarm_level() == 2) {
             return ThreadLocalRandom.current().nextLong(31, 60);
-        } else if (curr.getAlarml_level() == 3) {
+        } else if (curr.getAlarm_level() == 3) {
             return ThreadLocalRandom.current().nextLong(61, 90);
-        } else if (curr.getAlarml_level() == 4) {
+        } else if (curr.getAlarm_level() == 4) {
             return ThreadLocalRandom.current().nextLong(91, 100);
         }
         return -1;

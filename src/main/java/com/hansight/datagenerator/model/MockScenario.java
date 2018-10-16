@@ -11,7 +11,7 @@ public class MockScenario {
 
     private long end_time;
 
-    private long alarml_level;
+    private long alarm_level;
 
     private boolean consistent;
 
@@ -48,8 +48,8 @@ public class MockScenario {
         return end_time;
     }
 
-    public long getAlarml_level() {
-        return alarml_level;
+    public long getAlarm_level() {
+        return alarm_level;
     }
 
     public boolean isConsistent() {
@@ -116,8 +116,8 @@ public class MockScenario {
         this.end_time = end_time;
     }
 
-    public void setAlarml_level(long alarml_level) {
-        this.alarml_level = alarml_level;
+    public void setAlarm_level(long alarm_level) {
+        this.alarm_level = alarm_level;
     }
 
     public void setConsistent(boolean consistent) {
