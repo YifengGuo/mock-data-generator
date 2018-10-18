@@ -86,6 +86,8 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
             LOG.info("mock user {} is deleted", deleteResponse.getId());
         }
 
+        connection.client.admin().indices().prepareRefresh(UEBA_SETTINGS).get();
+
     }
 
     public MockUser initial(int index, Date date) {

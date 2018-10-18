@@ -23,7 +23,7 @@ public class GeneratorTest {
         SearchResponse response = connection.client().prepareSearch("ueba_settings")
                 .setTypes("user_info")
                 .setQuery(qb)
-                .setSize(100)
+                .setSize(1000)
                 .get();
 
         Arrays.stream(response.getHits().getHits()).forEach(hit -> System.out.println(hit.getSource()));

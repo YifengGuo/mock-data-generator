@@ -75,6 +75,7 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
             DeleteResponse deleteResponse = connection.client().prepareDelete(UEBA_ALARM_INDEX, ANOMALY_SCENARIOS, id).get();
             LOG.info("mock scenario {} is deleted", deleteResponse.getId());
         }
+        connection.client.admin().indices().prepareRefresh(UEBA_ALARM_INDEX).get();
     }
 
     /**
@@ -156,6 +157,7 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
                 .setTypes(ANOMALY_SCENARIOS)
                 .setQuery(QueryBuilders.termQuery("mockup", true))
                 .setQuery(QueryBuilders.termQuery("scenario", "mock_test_" + index))
+                .setSize(1000)
                 .get();
 
         if (response.getHits().getHits().length == 0) {
