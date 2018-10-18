@@ -22,6 +22,8 @@ public class Generator {
 
     private static final int WEEK_DAYS = 7;
 
+    private static final long DAY_MILLIS = 24 * 60 * 60 * 1000;
+
 
     public static void main(String[] args) {
 //        run(DEFAULT_SCENARIO_START_INDEX, DEFAULT_USER_START_INDEX, TODAY);

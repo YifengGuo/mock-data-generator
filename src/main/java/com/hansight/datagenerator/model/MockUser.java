@@ -35,6 +35,8 @@ public class MockUser {
 
     private long score;
 
+    private long alert_size;
+
     public long getAlarm_level() {
         return alarm_level;
     }
@@ -129,5 +131,13 @@ public class MockUser {
 
     public void setScore(long score) {
         this.score = score;
+    }
+
+    public long getAlert_size() {
+        return alert_size;
+    }
+
+    public void setAlert_size(long alert_size) {
+        this.alert_size = alert_size;
     }
 }

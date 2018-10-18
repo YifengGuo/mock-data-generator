@@ -52,7 +52,7 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
             }
             MockUser curr = initial(index, date);
             writeToES(jsonify(curr), UEBA_SETTINGS, USER_INFO, String.valueOf(index));
-            if (curr.getScenario_size() != 0L) {
+            if (curr.getScore() != 0L) {
                 counter.incrementAndGet();
             }
             index++;
@@ -97,6 +97,12 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
         curr.setScore(calculateScore(curr.getMock_user_scenarios()));
 
         curr.setAlarm_level(determineAlarmLevel(curr));
+
+        if (curr.getScore() == 0L) {
+            curr.setAlert_size(0L);
+        } else {
+            curr.setAlert_size(ThreadLocalRandom.current().nextLong(curr.getScenario_size(), 3 * curr.getScenario_size()));
+        }
 
         return curr;
     }

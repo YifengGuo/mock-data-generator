@@ -2,7 +2,6 @@ package com.hansight.datagenerator.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hansight.datagenerator.model.MockScenario;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -102,7 +101,7 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
         if (index <= SCENARIO_LIMIT) {
             index = index;
         } else {
-            index = ((index) % SCENARIO_LIMIT != 0) ? (index % SCENARIO_LIMIT) : 6; // guarantee there are always 6 scenarios in total but with different id and timestamp
+            index = ((index) % SCENARIO_LIMIT != 0) ? (index % SCENARIO_LIMIT) : SCENARIO_LIMIT; // guarantee there are always 6 scenarios in total but with different id and timestamp
         }
         curr.setScenario("mock_test_" + index);
         curr.setScenario_setting_id(UUID.randomUUID().toString());
