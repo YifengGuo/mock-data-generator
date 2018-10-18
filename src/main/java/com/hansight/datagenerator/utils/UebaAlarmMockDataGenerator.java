@@ -104,7 +104,14 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
             index = ((index) % SCENARIO_LIMIT != 0) ? (index % SCENARIO_LIMIT) : SCENARIO_LIMIT; // guarantee there are always 6 scenarios in total but with different id and timestamp
         }
         curr.setScenario("mock_test_" + index);
-        curr.setScenario_setting_id(UUID.randomUUID().toString());
+
+        // scenario with same scenario name shall have same setting_id
+        Map<String, Object> tmpMap = utilMap(index);
+        if ((boolean)tmpMap.get("isExisted") && !tmpMap.get("settingId").equals("")) {
+            curr.setScenario_setting_id(String.valueOf(tmpMap.get("settingId")));
+        } else {
+            curr.setScenario_setting_id(UUID.randomUUID().toString());
+        }
         curr.setModified(System.currentTimeMillis()); // set last modified time with now
         return curr;
     }
@@ -141,6 +148,25 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
             return ThreadLocalRandom.current().nextLong(91, 100);
         }
         return -1;
+    }
+
+    private Map<String, Object> utilMap(int index) {
+        Map<String, Object> res = new HashMap<>();
+        SearchResponse response = connection.client.prepareSearch(UEBA_ALARM_INDEX)
+                .setTypes(ANOMALY_SCENARIOS)
+                .setQuery(QueryBuilders.termQuery("mockup", true))
+                .setQuery(QueryBuilders.termQuery("scenario", "mock_test_" + index))
+                .get();
+
+        if (response.getHits().getHits().length == 0) {
+            res.put("isExisted", false);
+            res.put("settingId", "");
+            return res;
+        } else {
+            res.put("isExisted", true);
+            res.put("settingId", String.valueOf(response.getHits().getHits()[0].getSource().get("scenario_setting_id")));
+            return res;
+        }
     }
 
     @Override
