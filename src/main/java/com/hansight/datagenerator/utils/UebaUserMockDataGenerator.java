@@ -6,14 +6,21 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 /**
  * Created by guoyifeng on 10/15/18
@@ -25,6 +32,8 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
     private static final String UEBA_ALARM_INDEX = "ueba_alarm";
 
     private static final String ANOMALY_SCENARIOS = "anomaly_scenarios";
+
+    private static final String ANOMALY_BEHAVIORS = "anomaly_behaviors";
 
     private static final String UEBA_SETTINGS = "ueba_settings";
 
@@ -168,8 +177,8 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
             tmp.add(id);
         }
 //        LOG.info("tmp size is {}", tmp.size());
+        Set<String> dedup = new HashSet<>();
         for (int i = 0; i < size; i++) {
-            Set<String> dedup = new HashSet<>();
             int currIndex = new Random().nextInt(tmp.size());
             // guarantee an user will not trigger one scenario more than once
             while (dedup.contains(tmp.get(currIndex))) {
@@ -210,5 +219,59 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
     @Override
     public void close() {
         super.close();
+    }
+
+
+    public void updateUserScore() {
+        try {
+            List<String> ids = getAllMockUserIds();
+            for (String id : ids) {
+                long total = calculateTotalScore(id);
+                // update user score in elasticsearch
+                UpdateRequest updateRequest = new UpdateRequest();
+                updateRequest.index(UEBA_SETTINGS);
+                updateRequest.type(USER_INFO);
+                updateRequest.id(id);
+                updateRequest.doc(jsonBuilder()
+                        .startObject()
+                        .field("score", total)
+                        .endObject());
+                connection.client.update(updateRequest).get();
+            }
+        } catch (IOException | ExecutionException | InterruptedException e) {
+            LOG.error(e.getMessage());
+        }
+    }
+
+    public List<String> getAllMockUserIds() {
+        SearchResponse response = connection.client.prepareSearch(UEBA_SETTINGS)
+                .setTypes(USER_INFO)
+                .setQuery(QueryBuilders.termQuery("mockup", true))
+                .setSize(1000)
+                .get();
+        List<String> res = new ArrayList<>();
+
+        for (SearchHit hit : response.getHits().getHits()) {
+            res.add(String.valueOf(hit.getSource().get("id")));
+        }
+        return res;
+    }
+
+    /**
+     * user score = sigma(each of this user's behavior's score)
+     */
+    private long calculateTotalScore(String userId) {
+        long total = 0L;
+        SearchResponse response = connection.client.prepareSearch(UEBA_ALARM_INDEX)
+                .setTypes(ANOMALY_BEHAVIORS)
+                .setQuery(QueryBuilders.termQuery("mockup", true))
+                .setQuery(QueryBuilders.termQuery("entity", userId))
+                .setSize(1000)
+                .get();
+
+        for (SearchHit hit : response.getHits().getHits()) {
+            total += Long.parseLong(String.valueOf(hit.getSource().get("score")));
+        }
+        return total;
     }
 }

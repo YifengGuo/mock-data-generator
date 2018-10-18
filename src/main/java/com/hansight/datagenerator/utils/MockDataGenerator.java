@@ -37,9 +37,9 @@ public abstract class MockDataGenerator {
 
     public abstract void writeToES(String json, String index, String type, String id);
 
-    protected abstract void deleteExistedData();
+    public abstract void deleteExistedData();
 
-    protected abstract boolean generateData(int startIndex, Date date);
+    public abstract boolean generateData(int startIndex, Date date);
 
     protected static long getCurrentDayStart(Date date) {
         LocalDateTime localDateTime = dateToLocalDateTime(date);
@@ -57,7 +57,7 @@ public abstract class MockDataGenerator {
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 
-    protected void close() {
+    public void close() {
         connection.close();
     }
 

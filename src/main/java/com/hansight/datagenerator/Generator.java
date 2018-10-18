@@ -5,9 +5,12 @@ package com.hansight.datagenerator;
  */
 
 import com.hansight.datagenerator.utils.UebaAlarmMockDataGenerator;
+import com.hansight.datagenerator.utils.UebaBehaviorMockDataGenerator;
 import com.hansight.datagenerator.utils.UebaUserMockDataGenerator;
+import org.elasticsearch.action.search.SearchResponse;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * entry point of this project
@@ -28,7 +31,7 @@ public class Generator {
     public static void main(String[] args) {
 //        run(DEFAULT_SCENARIO_START_INDEX, DEFAULT_USER_START_INDEX, TODAY);
 //        run(2, DEFAULT_USER_START_INDEX, new Date(System.currentTimeMillis()-24*60*60*1000));
-        customGenerate(DEFAULT_USER_START_INDEX, WEEK_DAYS, TODAY);
+        customGenerate(DEFAULT_USER_START_INDEX, 1, TODAY);
     }
 
     /**
@@ -68,11 +71,13 @@ public class Generator {
         // initialize generators
         UebaAlarmMockDataGenerator scenarioGenerator = new UebaAlarmMockDataGenerator();
         UebaUserMockDataGenerator userGenerator = new UebaUserMockDataGenerator();
+        UebaBehaviorMockDataGenerator behaviorGenerator = new UebaBehaviorMockDataGenerator();
 
         // optional: delete existed data in the elasticsearch
         // if unnecessary, please comment this block
         scenarioGenerator.deleteExistedData();
         userGenerator.deleteExistedData();
+        behaviorGenerator.deleteExistedData();
 
         // write mock data to the elasticsearch
         // CAUTIONS: scenarios shall be write to the es BEFORE writing mock users to the es
@@ -80,10 +85,13 @@ public class Generator {
             scenarioGenerator.generateData(i, calculateDate(i));
         }
         userGenerator.generateData(userStartIndex, date);
+        behaviorGenerator.generateData(userStartIndex, date);
+        userGenerator.updateUserScore(); // update user's total score after behaviors are generated
 
         // close connection of elasticsearch
         scenarioGenerator.close();
         userGenerator.close();
+        behaviorGenerator.close();
     }
 
     private static Date calculateDate(int offset) {

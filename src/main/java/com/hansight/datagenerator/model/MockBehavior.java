@@ -35,6 +35,8 @@ public class MockBehavior {
 
     private String scenario_id;
 
+    private long score; // score = weight * scenario's alarm_level
+
     public long getAlarm_level() {
         return alarm_level;
     }
@@ -129,5 +131,13 @@ public class MockBehavior {
 
     public void setScenario_id(String scenario_id) {
         this.scenario_id = scenario_id;
+    }
+
+    public long getScore() {
+        return score;
+    }
+
+    public void setScore(long score) {
+        this.score = score;
     }
 }
