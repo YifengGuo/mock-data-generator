@@ -118,21 +118,32 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
     }
 
     private long determineAlarmLevel(MockUser curr) {
-        long totalScore = curr.getScore();
-        long size = curr.getScenario_size();
-        if (totalScore == 0) {
-            return 0;
+        if (curr.getScore() == 0) {
+            return 0L;
         }
-        long avgScore = totalScore / size;
-        if (avgScore > 0 && avgScore < 30) {
-            return 1;
-        } else if (avgScore >= 30 && avgScore < 60) {
-            return 2;
-        } else if (avgScore >= 60 && avgScore < 90) {
-            return 3;
-        } else {
-            return 4;
-        }
+        // fetch corresponding scenarios from es
+        // find the largest alarm_level among them and set it to the current user
+        List<String> scenarioIds = curr.getMock_user_scenarios();
+        long maxLevel = scenarioIds.stream()
+                .map(id -> Long.parseLong(String.valueOf(connection.client.prepareGet(UEBA_ALARM_INDEX, ANOMALY_SCENARIOS, id).get().getSource().get("alarm_level"))))
+                .max(Comparator.comparingLong(i -> i)).orElseThrow(NoSuchElementException::new);
+
+        return maxLevel;
+//        long totalScore = curr.getScore();
+//        long size = curr.getScenario_size();
+//        if (totalScore == 0) {
+//            return 0;
+//        }
+//        long avgScore = totalScore / size;
+//        if (avgScore > 0 && avgScore < 30) {
+//            return 1;
+//        } else if (avgScore >= 30 && avgScore < 60) {
+//            return 2;
+//        } else if (avgScore >= 60 && avgScore < 90) {
+//            return 3;
+//        } else {
+//            return 4;
+//        }
     }
 
     private List<String> generateRandomScenarios(MockUser curr) {
