@@ -109,6 +109,7 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
 
         curr.setAlarm_level(determineAlarmLevel(curr));
 
+        // will update in later process
         if (curr.getScore() == 0L) {
             curr.setAlert_size(0L);
         } else {
@@ -228,7 +229,9 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
         try {
             List<String> ids = getAllMockUserIds();
             for (String id : ids) {
-                long total = calculateTotalScore(id);
+                Map<String, Long> tmp = calculateTotalScore(id);
+                long total = tmp.get("totalScore");
+                long alertSize = tmp.get("alertSize");
                 // update user score in elasticsearch
                 UpdateRequest updateRequest = new UpdateRequest();
                 updateRequest.index(UEBA_SETTINGS);
@@ -237,6 +240,7 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
                 updateRequest.doc(jsonBuilder()
                         .startObject()
                         .field("score", total)
+                        .field("alert_size", alertSize)
                         .endObject());
                 connection.client.update(updateRequest).get();
             }
@@ -262,8 +266,9 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
     /**
      * user score = sigma(each of this user's behavior's score)
      */
-    private long calculateTotalScore(String userId) {
+    private Map<String, Long> calculateTotalScore(String userId) {
         long total = 0L;
+        long alertSize = 0L;
         SearchResponse response = connection.client.prepareSearch(UEBA_ALARM_INDEX)
                 .setTypes(ANOMALY_BEHAVIORS)
                 .setQuery(QueryBuilders.termQuery("mockup", true))
@@ -273,7 +278,11 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
 
         for (SearchHit hit : response.getHits().getHits()) {
             total += Long.parseLong(String.valueOf(hit.getSource().get("score")));
+            alertSize += Long.parseLong(String.valueOf(hit.getSource().get("count")));
         }
-        return total;
+        Map<String, Long> resMap = new HashMap<>();
+        resMap.put("totalScore", total);
+        resMap.put("alertSize", alertSize);
+        return resMap;
     }
 }

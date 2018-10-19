@@ -47,7 +47,7 @@ public class UebaBehaviorMockDataGenerator extends MockDataGenerator {
     @Override
     public boolean generateData(int startIndex, Date date) {
         List<Map<String, Object>> users = getMockUsers();
-        LOG.info("user size {}", users.size());
+//        LOG.info("user size {}", users.size());
         while (true) {
             for (int userIndex = 0; userIndex < users.size(); userIndex++) {  // iterate on users
                 List<String> scenarioList = (List)users.get(userIndex).get("mock_user_scenarios");
@@ -92,7 +92,7 @@ public class UebaBehaviorMockDataGenerator extends MockDataGenerator {
         MockBehavior curr = new MockBehavior();
 
         Map<String, Object> currUser = users.get(userIndex);  // outer loop iterates on currUser
-        LOG.info("user id is: {}", currUser.get("id"));
+//        LOG.info("user id is: {}", currUser.get("id"));
         curr.setEntity(String.valueOf(currUser.get("id")));
 
         String scenarioEsId = scenarioList.get(scenarioIndex);
