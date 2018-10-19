@@ -2,6 +2,7 @@ package com.hansight.datagenerator.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hansight.datagenerator.model.MockScenario;
+import com.oracle.tools.packager.Log;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -27,6 +28,8 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
 
     public List<Long> set = new ArrayList<>();
 
+    private static Map<String, String> settingIdMap = new HashMap<>();
+
     public UebaAlarmMockDataGenerator() {
         super();
     }
@@ -43,8 +46,17 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
         }
         while (true) {
             for (int i = (startIndex - 1) * SCENARIO_LIMIT + 1; i <= startIndex * SCENARIO_LIMIT; i++) {
-                MockScenario currScenario = initialMockScenario(i, date);
-                writeToES(jsonify(currScenario), UEBA_ALARM_INDEX, ANOMALY_SCENARIOS, String.valueOf(i));
+                int weeklyOccur = ThreadLocalRandom.current().nextInt(2, 8);  // a scenario would be triggered in 3 to 6 of a week days
+                // firstly randomly assign a day that current scenario will be triggered
+                // secondly randomly assign a count that current scenario will be triggered for this count times
+                for (int j = 0; j < weeklyOccur; j++) {
+                    int dailyRandom = ThreadLocalRandom.current().nextInt(2, 20);
+                    for (int k = 0; k < dailyRandom; k++) {
+                        MockScenario currScenario = initialMockScenario(i, new Date(date.getTime() - j * 24 * 60 * 60 * 1000));
+                        writeToES(jsonify(currScenario), UEBA_ALARM_INDEX, ANOMALY_SCENARIOS, UUID.randomUUID().toString());
+                    }
+                }
+
             }
             if (set.size() == 4) {
                 LOG.info("Scenarios generated with all alarm levels covered.");
@@ -106,12 +118,21 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
         }
         curr.setScenario("mock_test_" + index);
 
+        connection.client.admin().indices().prepareRefresh(UEBA_ALARM_INDEX).get();
+
         // scenario with same scenario name shall have same setting_id
-        Map<String, Object> tmpMap = utilMap(index);
-        if ((boolean)tmpMap.get("isExisted") && !tmpMap.get("settingId").equals("")) {
-            curr.setScenario_setting_id(String.valueOf(tmpMap.get("settingId")));
+//        Map<String, Object> tmpMap = utilMap(index);
+//        if ((boolean)tmpMap.get("isExisted") && !tmpMap.get("settingId").equals("")) {
+//            curr.setScenario_setting_id(String.valueOf(tmpMap.get("settingId")));
+//        } else {
+//            curr.setScenario_setting_id(UUID.randomUUID().toString());
+//            settingIdMap.put(String.valueOf(curr.getScenario()), curr.getScenario_setting_id());
+//        }
+        if (isExisted(index)) {
+            curr.setScenario_setting_id(settingIdMap.get(String.valueOf(curr.getScenario())));
         } else {
             curr.setScenario_setting_id(UUID.randomUUID().toString());
+            settingIdMap.put(String.valueOf(curr.getScenario()), curr.getScenario_setting_id());
         }
         curr.setModified(System.currentTimeMillis()); // set last modified time with now
         return curr;
@@ -169,6 +190,16 @@ public class UebaAlarmMockDataGenerator extends MockDataGenerator {
             res.put("settingId", String.valueOf(response.getHits().getHits()[0].getSource().get("scenario_setting_id")));
             return res;
         }
+    }
+
+    private boolean isExisted(int index) {
+        SearchResponse response = connection.client.prepareSearch(UEBA_ALARM_INDEX)
+                .setTypes(ANOMALY_SCENARIOS)
+                .setQuery(QueryBuilders.termQuery("mockup", true))
+                .setQuery(QueryBuilders.termQuery("scenario", "mock_test_" + index))
+                .setSize(1000)
+                .get();
+        return response.getHits().getHits().length > 0;
     }
 
     @Override

@@ -53,7 +53,7 @@ public class UebaBehaviorMockDataGenerator extends MockDataGenerator {
                 List<String> scenarioList = (List)users.get(userIndex).get("mock_user_scenarios");
                 for (int scenarioIndex = 0; scenarioIndex < scenarioList.size(); scenarioIndex++) { // iterate on current user's scenario list
                     // mock behavior based on each scenario this user has
-                    // each scenario may have multiple behaviors -> currently set it within [1, 3]
+                    // each scenario may have multiple behaviors -> currently set it within [6, 10]
                     int behaviorCount = ThreadLocalRandom.current().nextInt(6, 10);
                     for (int i = 0; i < behaviorCount; i++) {
                         MockBehavior curr = initial(users, userIndex, scenarioList, scenarioIndex);
