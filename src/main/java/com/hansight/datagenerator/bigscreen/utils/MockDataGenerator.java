@@ -1,4 +1,4 @@
-package com.hansight.datagenerator.utils;
+package com.hansight.datagenerator.bigscreen.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

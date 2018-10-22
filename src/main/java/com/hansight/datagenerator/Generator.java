@@ -4,13 +4,11 @@ package com.hansight.datagenerator;
  * Created by guoyifeng on 10/16/18
  */
 
-import com.hansight.datagenerator.utils.UebaAlarmMockDataGenerator;
-import com.hansight.datagenerator.utils.UebaBehaviorMockDataGenerator;
-import com.hansight.datagenerator.utils.UebaUserMockDataGenerator;
-import org.elasticsearch.action.search.SearchResponse;
+import com.hansight.datagenerator.bigscreen.utils.UebaAlarmMockDataGenerator;
+import com.hansight.datagenerator.bigscreen.utils.UebaBehaviorMockDataGenerator;
+import com.hansight.datagenerator.bigscreen.utils.UebaUserMockDataGenerator;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * entry point of this project

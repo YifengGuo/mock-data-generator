@@ -1,4 +1,4 @@
-package com.hansight.datagenerator.model;
+package com.hansight.datagenerator.bigscreen.model;
 
 /**
  * Created by guoyifeng on 10/18/18

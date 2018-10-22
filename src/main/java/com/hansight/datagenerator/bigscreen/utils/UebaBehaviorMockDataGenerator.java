@@ -1,7 +1,7 @@
-package com.hansight.datagenerator.utils;
+package com.hansight.datagenerator.bigscreen.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hansight.datagenerator.model.MockBehavior;
+import com.hansight.datagenerator.bigscreen.model.MockBehavior;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -11,7 +11,6 @@ import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 

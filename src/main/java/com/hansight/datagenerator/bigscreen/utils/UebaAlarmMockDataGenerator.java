@@ -1,8 +1,7 @@
-package com.hansight.datagenerator.utils;
+package com.hansight.datagenerator.bigscreen.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hansight.datagenerator.model.MockScenario;
-import com.oracle.tools.packager.Log;
+import com.hansight.datagenerator.bigscreen.model.MockScenario;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;

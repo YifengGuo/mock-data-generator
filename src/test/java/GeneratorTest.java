@@ -1,13 +1,11 @@
-import com.hansight.datagenerator.utils.ElasticsearchConnection;
+import com.hansight.datagenerator.bigscreen.utils.ElasticsearchConnection;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Date;
 
 /**
  * Created by guoyifeng on 10/18/18

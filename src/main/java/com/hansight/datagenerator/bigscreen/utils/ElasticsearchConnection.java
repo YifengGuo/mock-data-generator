@@ -1,4 +1,4 @@
-package com.hansight.datagenerator.utils;
+package com.hansight.datagenerator.bigscreen.utils;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.Strings;
