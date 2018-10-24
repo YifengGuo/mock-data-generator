@@ -37,7 +37,7 @@ public class UebaUserMockDataGenerator extends MockDataGenerator {
 
     private static final String USER_INFO = "user_info";
 
-    public static final int USERS_LIMIT = 11;
+    public static final int USERS_LIMIT = 5000;
 
     private AtomicInteger counter = new AtomicInteger(0);
 
